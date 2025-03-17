@@ -4,11 +4,11 @@ class Global {
   static const profile = 'profiles';
   static const register = 'users/';
   static const searchApi = 'product/';
-  static const category = 'categories';
+  static const category = 'categories/';
   // static const popularTours = 'tour/popular/';
   // static const trendingTours = 'tour/trending/';
-  static const productById = 'product/';
-  static const cart = 'cart/';
+  static const products = 'products/';
+  static const cart = 'carts/';
   static const order = 'orders/';
   static const orderiteam = 'order-items/';
   static const paymnet = 'payments/';

@@ -30,11 +30,11 @@ class _GroceryNavBarState extends State<GroceryNavBar> {
   int _selectedIndex = 0;
 
   // List of widgets for each tab
-  static const List<Widget> _widgetOptions = <Widget>[
-    Homepage(), // Home Screen
-    History(), // Favorites Screen
-    Cart(), // Cart Screen
-    Customerprofile(), // Profile Screen
+  static List<Widget> _widgetOptions = <Widget>[
+    HomePage(), // Home Screen
+    const OrderScreen(), // Favorites Screen
+    const CartScreen(), // Cart Screen
+    const CustomerProfileScreen(), // Profile Screen
   ];
 
   // Exit dialog for when the user presses the back button

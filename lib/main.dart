@@ -6,9 +6,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'constants/const_colors.dart';
+import 'controllers/product_controller.dart'; // Import the ProductController
 import 'utils/routes.dart';
 
 Future<void> main() async {
+  // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize GetStorage for persistent storage
@@ -20,6 +22,7 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  // Run the app
   runApp(const GroceryApp());
 }
 
@@ -134,6 +137,10 @@ class GroceryApp extends StatelessWidget {
               ),
             ),
           ),
+          // Register the ProductController here
+          initialBinding: BindingsBuilder(() {
+            Get.put(ProductController()); // Register ProductController
+          }),
         );
       },
     );

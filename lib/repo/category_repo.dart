@@ -1,20 +1,17 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:grocery/models/category_model.dart'; // Import the CategoryModel
 import 'package:grocery/common_repo.dart';
-
-import '../../constants/global.dart';
-import '../../constants/const_colors.dart';
+import 'package:grocery/constants/global.dart';
+import 'package:grocery/constants/const_colors.dart';
 
 class CategoryRepo {
   final API api = API();
-  final GetStorage box = GetStorage();
 
   /// Fetch all categories from the API
-  Future<List<dynamic>> getCategories() async {
+  Future<List<CategoryModel>> getCategories() async {
     try {
       // Make a GET request to the categories API
       Response response = await api.sendRequest.get(Global.category);
@@ -24,8 +21,9 @@ class CategoryRepo {
         // Log the response for debugging purposes
         log("Categories fetched successfully: ${response.data}");
 
-        // Return the list of categories
-        return response.data as List<dynamic>;
+        // Parse the response into a list of CategoryModel
+        List<dynamic> rawCategories = response.data["results"];
+        return rawCategories.map((category) => CategoryModel.fromJson(category)).toList();
       } else {
         // Show an error message if the request fails
         Fluttertoast.showToast(

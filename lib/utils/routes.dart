@@ -26,9 +26,9 @@ class Routes {
     GetPage(name: signIn, page: () => const SignIn()),
     GetPage(name: signUp, page: () => const SignUp()),
     GetPage(name: navbar, page: () => const GroceryNavBar()),
-    GetPage(name: home, page: () => const Homepage()),
-    GetPage(name: cart, page: () => const Cart()),
-    GetPage(name: history, page: () => const History()),
-    GetPage(name: profile, page: () => const Customerprofile()),
+    GetPage(name: home, page: () =>  HomePage()),
+    GetPage(name: cart, page: () => const CartScreen()),
+    GetPage(name: history, page: () => const OrderScreen()),
+    GetPage(name: profile, page: () => const CustomerProfileScreen()),
   ];
 }

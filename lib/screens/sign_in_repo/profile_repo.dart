@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:grocery/common_repo.dart';
-import 'package:grocery/constants/global.dart';
+import '../../../constants/global.dart';
 import '../../../constants/const_colors.dart';
 
 class ProfileRepo {
@@ -34,6 +34,10 @@ class ProfileRepo {
       if (response.statusCode == 200) {
         _profileData = response.data; // Store profile data
         log("Profile data: $_profileData");
+
+        // Extract and save the user ID
+        _saveUserIdFromResponse(_profileData);
+
         return _profileData;
       } else {
         Fluttertoast.showToast(
@@ -64,6 +68,24 @@ class ProfileRepo {
     }
   }
 
+  /// Extract and save the user ID from the profile response
+  void _saveUserIdFromResponse(Map<String, dynamic>? profileData) {
+    if (profileData != null &&
+        profileData.containsKey("results") &&
+        profileData["results"] is List &&
+        profileData["results"].isNotEmpty) {
+      var userData = profileData["results"][0]["user"];
+      if (userData != null && userData.containsKey("id")) {
+        int userId = userData["id"];
+        box.write('userId', userId); // Save user ID to GetStorage
+        log("User ID saved: $userId");
+      }
+    }
+  }
+
   /// Get stored profile data without making a new API call
   Map<String, dynamic>? get profileData => _profileData;
+
+  /// Get the saved user ID from GetStorage
+  int? get userId => box.read('userId');
 }
