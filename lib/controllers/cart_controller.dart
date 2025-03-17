@@ -16,6 +16,9 @@ class CartController extends GetxController {
   RxList<Map<String, dynamic>> cartItemsWithDetails = <Map<String, dynamic>>[].obs;
   RxDouble totalPrice = 0.0.obs;
 
+  // Loading state
+  RxBool isLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -25,6 +28,7 @@ class CartController extends GetxController {
   /// Fetch cart items and enrich them with product details
   Future<void> fetchCartItemsWithDetails() async {
     try {
+      isLoading(true); // Start loading
       // Clear existing cart items
       cartItemsWithDetails.clear();
 
@@ -66,6 +70,8 @@ class CartController extends GetxController {
         backgroundColor: ConstColors.red,
         colorText: Colors.white,
       );
+    } finally {
+      isLoading(false); // Stop loading
     }
   }
 
@@ -89,16 +95,22 @@ class CartController extends GetxController {
     totalPrice.value = total;
   }
 
-  /// Update cart item quantity via API
+  /// Update cart item quantity via API and locally
   Future<void> updateCartItem(int cartItemId, int newQuantity) async {
     try {
+      isLoading(true); // Start loading
       final success = await _cartRepo.updateCartItem(
         cartItemId: cartItemId,
         newQuantity: newQuantity,
       );
 
       if (success) {
-        fetchCartItemsWithDetails(); // Refresh cart items after update
+        // Update the quantity locally
+        final index = cartItemsWithDetails.indexWhere((item) => item['id'] == cartItemId);
+        if (index != -1) {
+          cartItemsWithDetails[index]['quantity'] = newQuantity;
+          calculateTotalPrice(); // Recalculate total price
+        }
       } else {
         Get.snackbar(
           "Error",
@@ -114,16 +126,21 @@ class CartController extends GetxController {
         backgroundColor: ConstColors.red,
         colorText: Colors.white,
       );
+    } finally {
+      isLoading(false); // Stop loading
     }
   }
 
-  /// Delete cart item via API
+  /// Delete cart item via API and locally
   Future<void> deleteCartItem(int cartItemId) async {
     try {
+      isLoading(true); // Start loading
       final success = await _cartRepo.deleteCartItem(cartItemId: cartItemId);
 
       if (success) {
-        fetchCartItemsWithDetails(); // Refresh cart items after deletion
+        // Remove the item locally
+        cartItemsWithDetails.removeWhere((item) => item['id'] == cartItemId);
+        calculateTotalPrice(); // Recalculate total price
       } else {
         Get.snackbar(
           "Error",
@@ -139,28 +156,40 @@ class CartController extends GetxController {
         backgroundColor: ConstColors.red,
         colorText: Colors.white,
       );
+    } finally {
+      isLoading(false); // Stop loading
     }
   }
 
   /// Place an order using the OrderRepo
-  Future<bool> placeOrder({
-    required int shopOwnerId,
-    required double totalPrice,
-    required List<Map<String, dynamic>> items,
-  }) async {
+  Future<bool> placeOrder() async {
     try {
+      isLoading(true); // Start loading
+
+      // Hardcoded user ID and shop owner ID
+      const int userId = 9;
+      const int shopOwnerId = 4;
+
+      // Prepare list of items for the order
+      List<Map<String, dynamic>> items = [];
+      for (var item in cartItemsWithDetails) {
+        final product = item['product'];
+        items.add({
+          "product_id": product.id,
+          "quantity": item['quantity'],
+        });
+      }
+
       // Call the createOrder method from OrderRepo
       final success = await _orderRepo.createOrder(
+        userId: userId,
         shopOwnerId: shopOwnerId,
-        totalPrice: totalPrice,
+        totalPrice: totalPrice.value,
         items: items,
       );
 
       if (success) {
         // Clear the cart after successfully placing the order
-        for (var item in cartItemsWithDetails) {
-          await _cartRepo.deleteCartItem(cartItemId: item['id']);
-        }
         cartItemsWithDetails.clear();
         calculateTotalPrice(); // Reset total price
 
@@ -189,6 +218,8 @@ class CartController extends GetxController {
         colorText: Colors.white,
       );
       return false;
+    } finally {
+      isLoading(false); // Stop loading
     }
   }
 }

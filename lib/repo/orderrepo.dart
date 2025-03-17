@@ -7,7 +7,6 @@ import 'package:grocery/common_repo.dart';
 import 'package:grocery/screens/sign_in_repo/profile_repo.dart';
 import '../../constants/global.dart';
 import '../../constants/const_colors.dart';
- // Import ProfileRepo
 
 class OrderRepo {
   final API api = API();
@@ -71,13 +70,12 @@ class OrderRepo {
 
   /// Create a new order
   Future<bool> createOrder({
+    required int userId, // Add userId as a required parameter
+    required int shopOwnerId,
     required double totalPrice,
-    required List<Map<String, dynamic>> items, required int shopOwnerId, 
+    required List<Map<String, dynamic>> items,
   }) async {
     try {
-      // Hardcoded shop owner ID
-      int shopOwnerId = 9;
-
       // Retrieve the saved token from persistent storage
       String? token = box.read('token');
       if (token == null || token.isEmpty) {
@@ -90,44 +88,14 @@ class OrderRepo {
         return false;
       }
 
-      // Fetch the user profile to get the user ID
-      Map<String, dynamic>? profileData = await _profileRepo.getProfile();
-      if (profileData == null || !profileData.containsKey("results")) {
-        Fluttertoast.showToast(
-          msg: "Failed to fetch user profile. Please try again.",
-          backgroundColor: ConstColors.red,
-          textColor: Colors.white,
-          toastLength: Toast.LENGTH_LONG,
-        );
-        return false;
-      }
-
-      // Extract the user ID from the profile data
-      int userId = -1;
-      if (profileData["results"] is List && profileData["results"].isNotEmpty) {
-        var userData = profileData["results"][0]["user"];
-        if (userData != null && userData.containsKey("id")) {
-          userId = userData["id"];
-        }
-      }
-
-      if (userId == -1) {
-        Fluttertoast.showToast(
-          msg: "User ID not found. Please log in again.",
-          backgroundColor: ConstColors.red,
-          textColor: Colors.white,
-          toastLength: Toast.LENGTH_LONG,
-        );
-        return false;
-      }
-
       // Prepare the request payload
       Map<String, dynamic> data = {
         "user": userId, // Include the user ID in the payload
-        "shop_owner": shopOwnerId, // Shop owner ID (hardcoded)
+        "shop_owner": shopOwnerId, // Shop owner ID
         "total_price": totalPrice.toStringAsFixed(2), // Format to 2 decimal places
+        "status": "pending", // Default status
         "items": items.map((item) => {
-              "product_id": item['product']['id'], // Extract product ID
+              "product_id": item['product_id'], // Extract product ID
               "quantity": item['quantity'], // Extract quantity
             }).toList(), // List of items in the order
       };

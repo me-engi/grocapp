@@ -88,9 +88,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// Product Card Widget
-
-
+/// Product Card Widget
 class ProductCard extends StatelessWidget {
   final ProductModel product;
 

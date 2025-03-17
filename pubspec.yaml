@@ -45,6 +45,7 @@ dependencies:
   google_nav_bar: ^5.0.7
   gap: ^3.0.1
   logger: ^2.5.0
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

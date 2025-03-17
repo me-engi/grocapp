@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:grocery/constants/const_colors.dart';
 import 'package:grocery/controllers/cart_controller.dart';
+import 'package:shimmer/shimmer.dart'; // Add shimmer package
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -14,44 +15,6 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   // Instantiate the CartController
   final CartController _cartController = Get.put(CartController());
-
-  /// Place an order and clear the cart
-  Future<void> _placeOrder() async {
-    final shopOwnerId = 4; // Hardcoded shop owner ID
-
-    // Prepare list of items for the order
-    List<Map<String, dynamic>> items = [];
-    for (var item in _cartController.cartItemsWithDetails) {
-      final product = item['product'];
-      items.add({
-        "product": product.id,
-        "quantity": item['quantity'],
-      });
-    }
-
-    // Call the placeOrder method in the CartController
-    final success = await _cartController.placeOrder(
-      shopOwnerId: shopOwnerId,
-      totalPrice: _cartController.totalPrice.value,
-      items: items,
-    );
-
-    if (success) {
-      Get.snackbar(
-        "Success",
-        "Order placed successfully!",
-        backgroundColor: ConstColors.green,
-        colorText: Colors.white,
-      );
-    } else {
-      Get.snackbar(
-        "Error",
-        "Failed to place the order.",
-        backgroundColor: ConstColors.red,
-        colorText: Colors.white,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +29,11 @@ class _CartScreenState extends State<CartScreen> {
       ),
       body: SafeArea(
         child: Obx(() {
+          // Show loading indicator while fetching data
+          if (_cartController.isLoading.value) {
+            return _buildShimmerEffect();
+          }
+
           // Check if the cart is empty
           if (_cartController.cartItemsWithDetails.isEmpty) {
             return Center(
@@ -85,7 +53,7 @@ class _CartScreenState extends State<CartScreen> {
                       final cartItemId = item['id'];
                       final product = item['product']; // Full product details
                       final quantity = item['quantity'];
-        
+
                       return Card(
                         margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
                         elevation: 2,
@@ -104,7 +72,7 @@ class _CartScreenState extends State<CartScreen> {
                               ),
                             ),
                             SizedBox(width: 16.w),
-        
+
                             // Product Details
                             Expanded(
                               child: Column(
@@ -128,7 +96,7 @@ class _CartScreenState extends State<CartScreen> {
                                 ],
                               ),
                             ),
-        
+
                             // Quantity Control
                             Row(
                               children: [
@@ -152,13 +120,21 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ],
                             ),
+
+                            // Delete Button
+                            IconButton(
+                              onPressed: () {
+                                _cartController.deleteCartItem(cartItemId);
+                              },
+                              icon: Icon(Icons.delete, size: 24.sp, color: ConstColors.red),
+                            ),
                           ],
                         ),
                       );
                     },
                   ),
                 ),
-        
+
                 // Total Price Section
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -176,13 +152,13 @@ class _CartScreenState extends State<CartScreen> {
                     ],
                   ),
                 ),
-        
+
                 // Place Order Button
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   child: ElevatedButton(
-                    onPressed: () {
-                      _placeOrder();
+                    onPressed: () async {
+                      await _cartController.placeOrder(); // Call the placeOrder method
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ConstColors.primaryColor,
@@ -202,6 +178,74 @@ class _CartScreenState extends State<CartScreen> {
           }
         }),
       ),
+    );
+  }
+
+  /// Shimmer effect for loading state
+  Widget _buildShimmerEffect() {
+    return ListView.builder(
+      itemCount: 5, // Number of shimmer items
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Card(
+            margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
+            elevation: 2,
+            child: Row(
+              children: [
+                // Shimmer for product image
+                Container(
+                  width: 80.w,
+                  height: 80.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.r),
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+
+                // Shimmer for product details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 100.w,
+                        height: 16.h,
+                        color: Colors.white,
+                      ),
+                      SizedBox(height: 4.h),
+                      Container(
+                        width: 60.w,
+                        height: 14.h,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Shimmer for quantity control
+                Row(
+                  children: [
+                    Container(
+                      width: 24.w,
+                      height: 24.h,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 8.w),
+                    Container(
+                      width: 24.w,
+                      height: 24.h,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grocery/models/category_model.dart';
-import 'package:grocery/models/productmodel.dart';
+import 'package:grocery/models/productbyid_model.dart';
+import 'package:grocery/models/productmodel.dart'; // Import ProductModel
+// Import ProductByIdModel
 import 'package:grocery/repo/cart_repo.dart';
 import 'package:grocery/repo/category_repo.dart';
 import 'package:grocery/repo/product_repo.dart';
 import 'dart:developer';
+
 class ProductController extends GetxController {
   final ProductRepo _productRepo = ProductRepo();
   final CartRepo _cartRepo = CartRepo();
@@ -67,28 +70,27 @@ class ProductController extends GetxController {
   }
 
   /// Fetch products filtered by category ID
-/// Fetch products filtered by category ID
-Future<void> fetchProductsByCategory(int categoryId) async {
-  try {
-    if (categoryId == 0) {
-      // If categoryId is 0, show all products
-      filteredProducts.value = allProducts;
-    } else {
-      // Fetch products for the selected category
-      List<ProductModel> products = await _productRepo.getProductsByCategory(categoryId);
+  Future<void> fetchProductsByCategory(int categoryId) async {
+    try {
+      if (categoryId == 0) {
+        // If categoryId is 0, show all products
+        filteredProducts.value = allProducts;
+      } else {
+        // Fetch products for the selected category using CategoryRepo
+        List<ProductModel> products = await _categoryRepo.getProductsByCategory(categoryId);
 
-      // Sanitize product data (ensure image URLs are valid)
-      filteredProducts.value = products.map((product) {
-        if (product.image == null || product.image.isEmpty) {
-          product.image = "https://via.placeholder.com/150"; // Default placeholder image
-        }
-        return product;
-      }).toList();
+        // Sanitize product data (ensure image URLs are valid)
+        filteredProducts.value = products.map((product) {
+          if (product.image == null || product.image.isEmpty) {
+            // product.image = "https://via.placeholder.com/150"; // Default placeholder image
+          }
+          return product;
+        }).toList();
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to fetch products for this category.");
     }
-  } catch (e) {
-    Get.snackbar("Error", "Failed to fetch products for this category.");
   }
-}
 
   /// Clear category filter and show all products
   void clearCategoryFilter() {
@@ -97,54 +99,61 @@ Future<void> fetchProductsByCategory(int categoryId) async {
   }
 
   /// Show product details in a dialog box
-void showProductDetails(BuildContext context, ProductModel product) {
-  log("Product Details: ${product.name}, ${product.price}, ${product.stock}, ${product.description}, ${product.image}");
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(product.name),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (product.image != null && product.image.isNotEmpty)
-              Image.network(
-                product.image,
-                height: 150,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            SizedBox(height: 10),
-            Text("Price: \$${product.price.toStringAsFixed(2)}"),
-            SizedBox(height: 10),
-            Text("Stock: ${product.stock}"),
-            SizedBox(height: 10),
-            Text("Description: ${product.description}"),
+  void showProductDetails(BuildContext context, ProductModel product) async {
+    try {
+      // Fetch product details by ID
+      ProductModel? productDetails = await _productRepo.getProductById(product.id);
+
+      // Show product details in a dialog
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(productDetails!.name),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (productDetails.image != null && productDetails.image.isNotEmpty)
+                  Image.network(
+                    productDetails.image,
+                    height: 150,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                SizedBox(height: 10),
+                Text("Price: \$${productDetails.price}"),
+                SizedBox(height: 10),
+                Text("Stock: ${productDetails.stock}"),
+                SizedBox(height: 10),
+                Text("Description: ${productDetails.description}"),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                bool success = await addToCart(productDetails.id);
+                if (success) {
+                  Get.snackbar("Success", "${productDetails.name} added to cart!");
+                  Navigator.of(context).pop();
+                } else {
+                  Get.snackbar("Error", "Failed to add product to cart.");
+                }
+              },
+              child: Text("Add to Cart"),
+            ),
           ],
         ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text("Cancel"),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            bool success = await addToCart(product.id);
-            if (success) {
-              Get.snackbar("Success", "${product.name} added to cart!");
-              Navigator.of(context).pop();
-            } else {
-              Get.snackbar("Error", "Failed to add product to cart.");
-            }
-          },
-          child: Text("Add to Cart"),
-        ),
-      ],
-    ),
-  );
-}
+      );
+    } catch (e) {
+      Get.snackbar("Error", "Failed to fetch product details.");
+    }
+  }
 
   /// Add product to cart via API with default quantity 1
   Future<bool> addToCart(int productId) async {

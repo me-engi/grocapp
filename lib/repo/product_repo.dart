@@ -31,26 +31,26 @@ class ProductRepo {
   }
 
   /// Fetch products filtered by category ID
-  Future<List<ProductModel>> getProductsByCategory(int categoryId) async {
-    try {
-      Response response = await api.sendRequest.get(
-        "${Global.products}?category=$categoryId",
-      );
+  // Future<List<ProductModel>> getProductsByCategory(int categoryId) async {
+  //   try {
+  //     Response response = await api.sendRequest.get(
+  //       "${Global.products}?category=$categoryId",
+  //     );
 
-      if (response.statusCode == 200) {
-        log("Products for category $categoryId fetched successfully: ${response.data}");
+  //     if (response.statusCode == 200) {
+  //       log("Products for category $categoryId fetched successfully: ${response.data}");
 
-        // Parse the response
-        return _parseProductResponse(response.data);
-      } else {
-        _showErrorToast("Failed to fetch products for category $categoryId. Please try again.");
-        return [];
-      }
-    } on DioException catch (e) {
-      _handleDioError(e);
-      return [];
-    }
-  }
+  //       // Parse the response
+  //       return _parseProductResponse(response.data);
+  //     } else {
+  //       _showErrorToast("Failed to fetch products for category $categoryId. Please try again.");
+  //       return [];
+  //     }
+  //   } on DioException catch (e) {
+  //     _handleDioError(e);
+  //     return [];
+  //   }
+  // }
 
   /// Fetch products by search query
   Future<List<ProductModel>> getProductsBySearch(String query) async {
