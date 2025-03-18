@@ -1,12 +1,13 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grocery/constants/const_colors.dart';
-import 'package:grocery/models/productmodel.dart'; // Import the ProductModel
+import 'package:grocery/constants/global.dart'; // Import the global file
+import 'package:grocery/models/productmodel.dart';
 import 'package:grocery/repo/cart_repo.dart';
 import 'package:grocery/repo/orderrepo.dart';
 import 'package:grocery/repo/product_repo.dart';
-import 'package:grocery/screens/paymnetsscreen.dart'; // Import PaymentScreen
+import 'package:grocery/screens/paymnetsscreen.dart';
+import 'dart:developer';
 
 class CartController extends GetxController {
   final CartRepo _cartRepo = CartRepo();
@@ -167,10 +168,6 @@ class CartController extends GetxController {
     try {
       isLoading(true); // Start loading
 
-      // Hardcoded user ID and shop owner ID
-      const int userId = 9;
-      const int shopOwnerId = 4;
-
       // Prepare list of items for the order
       List<Map<String, dynamic>> items = [];
       for (var item in cartItemsWithDetails) {
@@ -184,8 +181,8 @@ class CartController extends GetxController {
 
       // Call the createOrder method from OrderRepo
       Map<String, dynamic>? orderResponse = await _orderRepo.createOrder(
-        userId: userId,
-        shopOwnerId: shopOwnerId,
+        userId: Global.userId, // Use the hardcoded user ID from global.dart
+        shopOwnerId: Global.shopOwnerId, // Use the hardcoded shop owner ID from global.dart
         totalPrice: totalPrice.value,
         items: items,
       );

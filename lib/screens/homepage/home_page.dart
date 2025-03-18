@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:grocery/controllers/product_controller.dart';
 import 'package:grocery/models/category_model.dart';
 import 'package:grocery/models/productmodel.dart';
-import 'package:grocery/repo/cart_repo.dart';
 import 'package:grocery/widgets/searchbar_widget.dart';
+import 'package:shimmer/shimmer.dart'; // For shimmer effect
 
 class HomePage extends StatelessWidget {
   final ProductController _productController = Get.find();
@@ -12,78 +12,186 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          // Search Bar
-          SearchBarw(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          // Refresh data when pulled down
+          await _productController.fetchAllProducts();
+          await _productController.fetchCategories();
+        },
+        child: Column(
+          children: [
+            // Search Bar
+            SearchBarw(),
 
-          // Categories Section
-          Obx(() {
-            if (_productController.categories.isEmpty) {
-              return Center(child: CircularProgressIndicator());
-            }
-            return Container(
-              height: 80,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _productController.categories.length + 1, // +1 for "All Categories"
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    // "All Categories" option
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FilterChip(
-                        label: Text("All Categories"),
-                        selected: _productController.selectedCategoryId.value == 0,
-                        onSelected: (selected) {
-                          _productController.clearCategoryFilter();
-                        },
-                      ),
-                    );
-                  } else {
-                    // Other categories
-                    CategoryModel category = _productController.categories[index - 1];
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FilterChip(
-                        label: Text(category.name),
-                        selected: _productController.selectedCategoryId.value == category.id,
-                        onSelected: (selected) {
-                          _productController.selectedCategoryId.value = category.id;
-                          _productController.fetchProductsByCategory(category.id);
-                        },
-                      ),
-                    );
-                  }
-                },
-              ),
-            );
-          }),
-
-          // Products Grid View
-          Expanded(
-            child: Obx(() {
-              if (_productController.filteredProducts.isEmpty) {
-                return Center(child: Text("No products found for this category."));
+            // Categories Section
+            Obx(() {
+              if (_productController.categories.isEmpty) {
+                return _buildCategoryShimmer(); // Shimmer effect for categories
               }
-              return GridView.builder(
-                padding: EdgeInsets.all(10),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 0.75,
+              return Container(
+                height: 80,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _productController.categories.length + 1, // +1 for "All Categories"
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      // "All Categories" option
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FilterChip(
+                          label: Text("All Categories"),
+                          selected: _productController.selectedCategoryId.value == 0,
+                          onSelected: (selected) {
+                            _productController.clearCategoryFilter();
+                          },
+                        ),
+                      );
+                    } else {
+                      // Other categories
+                      CategoryModel category = _productController.categories[index - 1];
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FilterChip(
+                          label: Text(category.name),
+                          selected: _productController.selectedCategoryId.value == category.id,
+                          onSelected: (selected) {
+                            _productController.selectedCategoryId.value = category.id;
+                            _productController.fetchProductsByCategory(category.id);
+                          },
+                        ),
+                      );
+                    }
+                  },
                 ),
-                itemCount: _productController.filteredProducts.length,
-                itemBuilder: (context, index) {
-                  ProductModel product = _productController.filteredProducts[index];
-                  return ProductCard(product: product);
-                },
               );
             }),
-          ),
-        ],
+
+            // Products Grid View
+            Expanded(
+              child: Obx(() {
+                if (_productController.filteredProducts.isEmpty && _productController.allProducts.isNotEmpty) {
+                  return Center(child: Text("No products found for this category."));
+                }
+                if (_productController.allProducts.isEmpty) {
+                  return _buildProductShimmer(); // Shimmer effect for products
+                }
+                return GridView.builder(
+                  padding: EdgeInsets.all(10),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.75,
+                  ),
+                  itemCount: _productController.filteredProducts.length,
+                  itemBuilder: (context, index) {
+                    ProductModel product = _productController.filteredProducts[index];
+                    return ProductCard(product: product);
+                  },
+                );
+              }),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  /// Shimmer effect for categories
+  Widget _buildCategoryShimmer() {
+    return Container(
+      height: 80,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 6, // Number of shimmer items
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  /// Shimmer effect for products
+  Widget _buildProductShimmer() {
+    return GridView.builder(
+      padding: EdgeInsets.all(10),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 0.75,
+      ),
+      itemCount: 6, // Number of shimmer items
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Card(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Shimmer for image
+                Expanded(
+                  child: Container(
+                    color: Colors.white,
+                  ),
+                ),
+
+                // Shimmer for text
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 16,
+                        color: Colors.white,
+                      ),
+                      SizedBox(height: 5),
+                      Container(
+                        width: 60,
+                        height: 14,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Shimmer for button
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -96,11 +204,12 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CartRepo _cartRepo = CartRepo(); // Initialize CartRepo
+    final ProductController _productController = Get.find();
 
     return GestureDetector(
       onTap: () {
-        // Optional: You can keep this if you want to navigate to a product details page later
+        // Show product details dialog
+        _productController.showProductDetails(context, product);
       },
       child: Card(
         elevation: 5,
@@ -152,18 +261,7 @@ class ProductCard extends StatelessWidget {
                 width: double.infinity, // Make the button full width
                 child: ElevatedButton(
                   onPressed: () async {
-                    // Hardcoded user ID and default quantity
-                    const int userId = 9; // Hardcoded user ID
-                    const int quantity = 1; // Default quantity
-
-                    // Call the addToCart method from CartRepo
-                    bool success = await _cartRepo.addToCart(
-                      productId: product.id,
-                      quantity: quantity,
-                      userId: userId,
-                    );
-
-                    // Show feedback to the user
+                    bool success = await _productController.addToCart(product.id);
                     if (success) {
                       Get.snackbar(
                         "Success",

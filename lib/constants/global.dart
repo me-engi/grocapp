@@ -25,7 +25,7 @@ class Global {
   // static const notification = 'notifications/';
   // static const getcomments = 'comments/';
   // static const postcomments = 'comments/';
+  static const int userId = 9;
+  static const int shopOwnerId = 4;
 }
 
-const int userId = 9;
-const int shopOwnerId = 4;

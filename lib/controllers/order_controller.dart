@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:grocery/constants/global.dart'; // Import the global file
 import 'package:grocery/repo/orderrepo.dart';
 
 class OrderController extends GetxController {
@@ -24,13 +25,14 @@ class OrderController extends GetxController {
     required double totalPrice,
     required List<Map<String, dynamic>> items,
   }) async {
-    const int userId = 9; // Hardcoded user ID
-    const int shopOwnerId = 4; // Hardcoded shop owner ID
+    // Use the hardcoded user ID and shop owner ID from global.dart
+    final int userId = Global.userId;
+    final int shopOwnerId = Global.shopOwnerId;
 
     // Call the createOrder method from OrderRepo
     Map<String, dynamic>? orderResponse = await _orderRepo.createOrder(
-      userId: userId, // Pass the hardcoded user ID
-      shopOwnerId: shopOwnerId, // Pass the hardcoded shop owner ID
+      userId: userId, // Pass the user ID from global.dart
+      shopOwnerId: shopOwnerId, // Pass the shop owner ID from global.dart
       totalPrice: totalPrice,
       items: items,
     );

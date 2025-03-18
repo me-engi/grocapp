@@ -122,7 +122,7 @@ class ProductController extends GetxController {
                     fit: BoxFit.cover,
                   ),
                 SizedBox(height: 10),
-                Text("Price: \$${productDetails.price}"),
+                Text("Price: \₹${productDetails.price}"),
                 SizedBox(height: 10),
                 Text("Stock: ${productDetails.stock}"),
                 SizedBox(height: 10),
