@@ -6,6 +6,7 @@ import 'package:grocery/models/productmodel.dart'; // Import the ProductModel
 import 'package:grocery/repo/cart_repo.dart';
 import 'package:grocery/repo/orderrepo.dart';
 import 'package:grocery/repo/product_repo.dart';
+import 'package:grocery/screens/paymnetsscreen.dart'; // Import PaymentScreen
 
 class CartController extends GetxController {
   final CartRepo _cartRepo = CartRepo();
@@ -161,8 +162,8 @@ class CartController extends GetxController {
     }
   }
 
-  /// Place an order using the OrderRepo
-  Future<bool> placeOrder() async {
+  /// Place an order and navigate to the payment screen
+  Future<void> placeOrderAndNavigateToPayment() async {
     try {
       isLoading(true); // Start loading
 
@@ -177,29 +178,32 @@ class CartController extends GetxController {
         items.add({
           "product_id": product.id,
           "quantity": item['quantity'],
+          "price": product.price,
         });
       }
 
       // Call the createOrder method from OrderRepo
-      final success = await _orderRepo.createOrder(
+      Map<String, dynamic>? orderResponse = await _orderRepo.createOrder(
         userId: userId,
         shopOwnerId: shopOwnerId,
         totalPrice: totalPrice.value,
         items: items,
       );
 
-      if (success) {
+      if (orderResponse != null) {
+        // Extract the order ID and total price from the response
+        int orderId = orderResponse['id'];
+        double totalAmount = double.parse(orderResponse['total_price']);
+
         // Clear the cart after successfully placing the order
         cartItemsWithDetails.clear();
         calculateTotalPrice(); // Reset total price
 
-        // Show success message
-        Get.snackbar(
-          "Success",
-          "Order placed successfully!",
-          backgroundColor: ConstColors.green,
-          colorText: Colors.white,
-        );
+        // Navigate to the payment screen
+        Get.to(() => PaymentScreen(
+          orderId: orderId,
+          totalAmount: totalAmount,
+        ));
       } else {
         Get.snackbar(
           "Error",
@@ -208,8 +212,6 @@ class CartController extends GetxController {
           colorText: Colors.white,
         );
       }
-
-      return success;
     } catch (e) {
       Get.snackbar(
         "Error",
@@ -217,7 +219,6 @@ class CartController extends GetxController {
         backgroundColor: ConstColors.red,
         colorText: Colors.white,
       );
-      return false;
     } finally {
       isLoading(false); // Stop loading
     }

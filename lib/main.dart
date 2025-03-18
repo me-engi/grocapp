@@ -137,9 +137,9 @@ class GroceryApp extends StatelessWidget {
               ),
             ),
           ),
-          // Register the ProductController here
+          // Register the ProductController using Get.lazyPut
           initialBinding: BindingsBuilder(() {
-            Get.put(ProductController()); // Register ProductController
+            Get.lazyPut<ProductController>(() => ProductController());
           }),
         );
       },

@@ -69,7 +69,7 @@ class OrderRepo {
   }
 
   /// Create a new order
-  Future<bool> createOrder({
+  Future<Map<String, dynamic>?> createOrder({
     required int userId, // Add userId as a required parameter
     required int shopOwnerId,
     required double totalPrice,
@@ -85,7 +85,7 @@ class OrderRepo {
           textColor: Colors.white,
           toastLength: Toast.LENGTH_LONG,
         );
-        return false;
+        return null;
       }
 
       // Prepare the request payload
@@ -117,7 +117,9 @@ class OrderRepo {
           textColor: Colors.white,
           toastLength: Toast.LENGTH_LONG,
         );
-        return true;
+
+        // Return the entire response data
+        return response.data as Map<String, dynamic>;
       } else {
         Fluttertoast.showToast(
           msg: "Failed to place the order. Please try again.",
@@ -125,7 +127,7 @@ class OrderRepo {
           textColor: Colors.white,
           toastLength: Toast.LENGTH_LONG,
         );
-        return false;
+        return null;
       }
     } on DioException catch (e) {
       if (e.response != null &&
@@ -145,7 +147,7 @@ class OrderRepo {
           toastLength: Toast.LENGTH_LONG,
         );
       }
-      return false;
+      return null;
     }
   }
 }

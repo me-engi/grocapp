@@ -158,7 +158,7 @@ class _CartScreenState extends State<CartScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   child: ElevatedButton(
                     onPressed: () async {
-                      await _cartController.placeOrder(); // Call the placeOrder method
+                      await _cartController.placeOrderAndNavigateToPayment(); // Call the placeOrder method
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ConstColors.primaryColor,

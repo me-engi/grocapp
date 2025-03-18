@@ -12,7 +12,7 @@ class Global {
   static const cart = 'carts/';
   static const order = 'orders/';
   static const orderiteam = 'order-items/';
-  static const paymnet = 'payments/';
+  static const payments = 'payments/';
   static const forgotPassword =
       "https://ghumneho.pythonanywhere.com/password_reset/";
   // static const likeTour = 'toggle-favorite/';
@@ -26,3 +26,6 @@ class Global {
   // static const getcomments = 'comments/';
   // static const postcomments = 'comments/';
 }
+
+const int userId = 9;
+const int shopOwnerId = 4;
