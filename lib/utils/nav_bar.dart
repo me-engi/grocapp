@@ -39,68 +39,70 @@ class _GroceryNavBarState extends State<GroceryNavBar> {
 
   // Exit dialog for when the user presses the back button
 
-
-Future<bool> exitDialog() async {
-  return await showDialog(
-    barrierDismissible: true,
-    barrierColor: ConstColors.textColor.withOpacity(0.1),
-    context: context,
-    builder: (context) => AlertDialog(
-      backgroundColor: ConstColors.backgroundColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.r), // Responsive border radius
-      ),
-      title: Text(
-        "Hold on!",
-        style: TextStyle(
-          fontSize: 20.sp, // Responsive font size
-          fontWeight: FontWeight.bold,
-          color: ConstColors.textColor,
-        ),
-      ),
-      content: Text(
-        "Are you sure you want to exit?",
-        style: TextStyle(
-          fontSize: 16.sp, // Responsive font size
-          fontWeight: FontWeight.w500,
-          color: ConstColors.textColor,
-        ),
-      ),
-      actions: [
-        // Cancel Button
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context); // Close the dialog
-          },
-          child: Text(
-            "No",
-            style: TextStyle(
-              fontSize: 16.sp, // Responsive font size
-              fontWeight: FontWeight.bold,
-              color: ConstColors.primaryColor,
-            ),
-          ),
-        ),
-        // Exit Button
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop(true); // Confirm exit
-            exit(0); // Exit the app
-          },
-          child: Text(
-            "Yes",
-            style: TextStyle(
-              fontSize: 16.sp, // Responsive font size
-              fontWeight: FontWeight.bold,
-              color: ConstColors.textColor,
-            ),
-          ),
-        ),
-      ],
-    ),
-  ) ??
-      false;
-}
+  Future<bool> exitDialog() async {
+    return await showDialog(
+          barrierDismissible: true,
+          barrierColor: ConstColors.textColor.withOpacity(0.1),
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                backgroundColor: ConstColors.backgroundColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    15.r,
+                  ), // Responsive border radius
+                ),
+                title: Text(
+                  "Hold on!",
+                  style: TextStyle(
+                    fontSize: 20.sp, // Responsive font size
+                    fontWeight: FontWeight.bold,
+                    color: ConstColors.textColor,
+                  ),
+                ),
+                content: Text(
+                  "Are you sure you want to exit?",
+                  style: TextStyle(
+                    fontSize: 16.sp, // Responsive font size
+                    fontWeight: FontWeight.w500,
+                    color: ConstColors.textColor,
+                  ),
+                ),
+                actions: [
+                  // Cancel Button
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the dialog
+                    },
+                    child: Text(
+                      "No",
+                      style: TextStyle(
+                        fontSize: 16.sp, // Responsive font size
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF136F39),
+                      ),
+                    ),
+                  ),
+                  // Exit Button
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true); // Confirm exit
+                      exit(0); // Exit the app
+                    },
+                    child: Text(
+                      "Yes",
+                      style: TextStyle(
+                        fontSize: 16.sp, // Responsive font size
+                        fontWeight: FontWeight.bold,
+                        color: ConstColors.textColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,17 +127,17 @@ Future<bool> exitDialog() async {
                   },
                   icon: Icon(
                     Icons.menu_rounded,
-                    color: ConstColors.primaryColor,
+                    color: Color(0xFF136F39),
                     size: 28.sp, // Responsive icon size
                   ),
                 ),
               ),
               Text(
-                'Grocery App',
+                'FarmIn Grow',
                 style: GoogleFonts.poppins(
                   fontSize: 20.sp, // Responsive font size
                   fontWeight: FontWeight.w600,
-                  color: ConstColors.primaryColor,
+                  color: Color(0xFF136F39),
                 ),
               ),
               Padding(
@@ -146,7 +148,7 @@ Future<bool> exitDialog() async {
                   },
                   icon: Icon(
                     CupertinoIcons.bell,
-                    color: ConstColors.primaryColor,
+                    color: Color(0xFF136F39),
                     size: 28.sp, // Responsive icon size
                   ),
                 ),
@@ -156,13 +158,14 @@ Future<bool> exitDialog() async {
           centerTitle: true,
         ),
         drawer: MenuDrawer(),
-        body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
+        body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
         bottomNavigationBar: Container(
-          margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w), // Responsive margin
+          margin: EdgeInsets.symmetric(
+            vertical: 10.h,
+            horizontal: 15.w,
+          ), // Responsive margin
           decoration: BoxDecoration(
-            color: ConstColors.backgroundColor,
+            color: const Color(0xFF2C2F43),
             borderRadius: BorderRadius.circular(20.r), // Responsive radius
             boxShadow: [
               BoxShadow(
@@ -173,34 +176,31 @@ Future<bool> exitDialog() async {
           ),
           child: SafeArea(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h), // Responsive padding
+              padding: EdgeInsets.symmetric(
+                horizontal: 10.w,
+                vertical: 8.h,
+              ), // Responsive padding
               child: GNav(
                 rippleColor: Colors.grey[300]!,
                 hoverColor: Colors.grey[100]!,
                 gap: 8.w, // Responsive gap
                 activeColor: ConstColors.backgroundColor,
                 iconSize: 24.sp, // Responsive icon size
-                padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 8.h), // Responsive padding
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15.w,
+                  vertical: 8.h,
+                ), // Responsive padding
                 duration: const Duration(milliseconds: 400),
-                tabBackgroundColor: ConstColors.primaryColor,
-                color: Colors.grey,
+                tabBackgroundColor: const Color(0xFF27A84A),
+                color: const Color(0xFF83899E),
                 tabs: const [
-                  GButton(
-                    icon: Icons.home,
-                    text: 'Home',
-                  ),
+                  GButton(icon: Icons.home, text: 'Home'),
                   GButton(
                     icon: Icons.history, // Changed from favorite to history
                     text: 'History',
                   ),
-                  GButton(
-                    icon: Icons.shopping_cart,
-                    text: 'Cart',
-                  ),
-                  GButton(
-                    icon: Icons.person,
-                    text: 'Profile',
-                  ),
+                  GButton(icon: Icons.shopping_cart, text: 'Cart'),
+                  GButton(icon: Icons.person, text: 'Profile'),
                 ],
                 selectedIndex: _selectedIndex,
                 onTabChange: (index) {

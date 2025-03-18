@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ConstColors {
-  static const Color primaryColor = Color(0xFFFF8B28);
+  static const Color primaryColor = Color(0xFF27A84A);
   static const Color red = Color(0xFFFF0000);
   static const Color blue = Color(0xFF3D97B4);
   static const Color textblue = Color(0xFF0972AD);
@@ -33,15 +33,15 @@ class ConstColors {
   // static const Color iconcolor = Color(0xFF42A5F5);
   // static const Color welcomeText = Colors.black54;
 
-//Text color
+  //Text color
 
   // static const Color black = Colors.black;
 
-//background color
+  //background color
   // static const Color backgroundColor = Color(0xFFEBFFFD);
   // static const Color offwhite = Color(0xFAEFEBEB);
 
-//button colors
+  //button colors
   // static const Color blue = Color.fromRGBO(70, 156, 255, 1);
   // static const Color lightBlue = Color(0xFF96D1FE);
 }

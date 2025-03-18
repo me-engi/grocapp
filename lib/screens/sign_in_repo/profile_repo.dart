@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
@@ -9,9 +8,8 @@ import '../../../constants/const_colors.dart';
 class ProfileRepo {
   API api = API();
   GetStorage box = GetStorage();
-  Map<String, dynamic>? _profileData; // Variable to store profile data
 
-  /// Fetch user profile and store it in `_profileData`
+  /// Fetch user profile
   Future<Map<String, dynamic>?> getProfile() async {
     try {
       // Retrieve the saved token
@@ -32,13 +30,7 @@ class ProfileRepo {
       );
 
       if (response.statusCode == 200) {
-        _profileData = response.data; // Store profile data
-        log("Profile data: $_profileData");
-
-        // Extract and save the user ID
-        _saveUserIdFromResponse(_profileData);
-
-        return _profileData;
+        return response.data; // Return the raw API response
       } else {
         Fluttertoast.showToast(
           msg: "Failed to fetch profile. Please try again.",
@@ -67,25 +59,4 @@ class ProfileRepo {
       return null;
     }
   }
-
-  /// Extract and save the user ID from the profile response
-  void _saveUserIdFromResponse(Map<String, dynamic>? profileData) {
-    if (profileData != null &&
-        profileData.containsKey("results") &&
-        profileData["results"] is List &&
-        profileData["results"].isNotEmpty) {
-      var userData = profileData["results"][0]["user"];
-      if (userData != null && userData.containsKey("id")) {
-        int userId = userData["id"];
-        box.write('userId', userId); // Save user ID to GetStorage
-        log("User ID saved: $userId");
-      }
-    }
-  }
-
-  /// Get stored profile data without making a new API call
-  Map<String, dynamic>? get profileData => _profileData;
-
-  /// Get the saved user ID from GetStorage
-  int? get userId => box.read('userId');
 }

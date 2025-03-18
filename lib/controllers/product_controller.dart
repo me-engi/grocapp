@@ -99,61 +99,126 @@ class ProductController extends GetxController {
   }
 
   /// Show product details in a dialog box
-  void showProductDetails(BuildContext context, ProductModel product) async {
-    try {
-      // Fetch product details by ID
-      ProductModel? productDetails = await _productRepo.getProductById(product.id);
+ void showProductDetails(BuildContext context, ProductModel product) async {
+  try {
+    // Fetch product details by ID
+    ProductModel? productDetails = await _productRepo.getProductById(product.id);
 
-      // Show product details in a dialog
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(productDetails!.name),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (productDetails.image != null && productDetails.image.isNotEmpty)
-                  Image.network(
-                    productDetails.image,
-                    height: 150,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+    // Check if product details are valid
+    if (productDetails == null) {
+      Get.snackbar(
+        "Error",
+        "Failed to fetch product details.",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    // Show product details in a dialog
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          productDetails.name,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Product Image
+              if (productDetails.image != null && productDetails.image.isNotEmpty)
+                Container(
+                  height: 150, // Fixed height for the image
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage(productDetails.image),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                SizedBox(height: 10),
-                Text("Price: \₹${productDetails.price}"),
-                SizedBox(height: 10),
-                Text("Stock: ${productDetails.stock}"),
-                SizedBox(height: 10),
-                Text("Description: ${productDetails.description}"),
-              ],
+                ),
+              SizedBox(height: 10),
+
+              // Price
+              Text(
+                "Price: \₹${productDetails.price.toStringAsFixed(2)}",
+                style: TextStyle(fontSize: 16, color: Colors.green),
+              ),
+              SizedBox(height: 10),
+
+              // Stock
+              Text(
+                "Stock: ${productDetails.stock}",
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 10),
+
+              // Description
+              Text(
+                "Description: ${productDetails.description ?? 'No description available.'}",
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          // Cancel Button
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              "Cancel",
+              style: TextStyle(color: Colors.red),
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text("Cancel"),
+
+          // Add to Cart Button
+          ElevatedButton(
+            onPressed: () async {
+              bool success = await addToCart(productDetails.id);
+              if (success) {
+                Get.snackbar(
+                  "Success",
+                  "${productDetails.name} added to cart!",
+                  backgroundColor: Colors.green,
+                  colorText: Colors.white,
+                );
+                Navigator.of(context).pop();
+              } else {
+                Get.snackbar(
+                  "Error",
+                  "Failed to add product to cart.",
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFF136F39), // Button color
+              foregroundColor: Colors.white, // Text color
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                bool success = await addToCart(productDetails.id);
-                if (success) {
-                  Get.snackbar("Success", "${productDetails.name} added to cart!");
-                  Navigator.of(context).pop();
-                } else {
-                  Get.snackbar("Error", "Failed to add product to cart.");
-                }
-              },
-              child: Text("Add to Cart"),
-            ),
-          ],
-        ),
-      );
-    } catch (e) {
-      Get.snackbar("Error", "Failed to fetch product details.");
-    }
+            child: Text("Add to Cart"),
+          ),
+        ],
+      ),
+    );
+  } catch (e) {
+    // Handle any unexpected errors
+    Get.snackbar(
+      "Error",
+      "An unexpected error occurred. Please try again.",
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
   }
+}
 
   /// Add product to cart via API with default quantity 1
   Future<bool> addToCart(int productId) async {

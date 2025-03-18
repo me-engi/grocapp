@@ -11,7 +11,8 @@ import 'package:logger/logger.dart'; // Import the logger package
 // Initialize a logger instance
 final logger = Logger(
   printer: PrettyPrinter(
-    methodCount: 0, // Number of method calls to show (set to 0 for cleaner output)
+    methodCount:
+        0, // Number of method calls to show (set to 0 for cleaner output)
     errorMethodCount: 5, // Number of method calls to show for errors
     lineLength: 50, // Line length for logs
     colors: true, // Enable colored logs
@@ -33,7 +34,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
     return Drawer(
       width: 0.8.sw, // Responsive width (80% of screen width)
       child: Container(
-        color: ConstColors.backgroundColor,
+        color: const Color.fromARGB(255, 255, 255, 255),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 20.h),
           child: Column(
@@ -42,7 +43,6 @@ class _MenuDrawerState extends State<MenuDrawer> {
               // Logo Widget
               const LogoWidget(),
               SizedBox(height: 20.h), // Responsive spacing
-
               // Divider Line
               Container(
                 width: double.infinity,
@@ -68,21 +68,21 @@ class _MenuDrawerState extends State<MenuDrawer> {
                         Icons.hiking_rounded,
                         () => showInfo(
                           context,
-                          "Become a travel guide",
-                          "Do you love traveling and have a passion for sharing your experiences with others? Become a Ghumneyho Travel Guide! Send your resume to join our team and help others explore the world.\n\nInstructions:\nTo apply, please send your resume to",
+                          "Become a Delivery Boy",
+                          "Do you love being on the move and have a passion for quick and efficient deliveries? Become a Grocery Delivery Partner! Join our team to help customers receive fresh groceries right at their doorstep.\n\nInstructions:\nTo apply, please send your resume to",
                           "grocery@growapp.com",
                         ),
                       ),
 
                       // Become an Affiliate Partner
                       menuOption(
-                        "shop partner",
+                        "Become a Vendor",
                         Icons.handshake,
                         () => showInfo(
                           context,
-                          "Become an affiliate partner",
-                          "Are you a travel corporation looking to collaborate with Ghumneyho? Become our travel partner! Send us your certificate of incorporation to start the partnership.\n\nInstructions:\nTo apply, please send your certificate of incorporation to",
-                          "grocery@growapp.com",
+                          "Become a Vendor",
+                          "Partner with us and sell your grocery products on our platform. Reach thousands of customers daily!",
+                          "vendors@groceryapp.com",
                         ),
                       ),
 
@@ -114,11 +114,20 @@ class _MenuDrawerState extends State<MenuDrawer> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            socialMediaIcon('assets/Facebook.png', 'https://www.facebook.com/profile.php?id=61554850642634'),
+                            socialMediaIcon(
+                              'assets/Facebook.png',
+                              'https://www.facebook.com/profile.php?id=61554850642634',
+                            ),
                             SizedBox(width: 20.w),
-                            socialMediaIcon('assets/Instagram.png', 'https://www.instagram.com/g_humnaho/'),
+                            socialMediaIcon(
+                              'assets/Instagram.png',
+                              'https://www.instagram.com/g_humnaho/',
+                            ),
                             SizedBox(width: 20.w),
-                            socialMediaIcon('assets/Twitter.png', 'twitter.com/ghumneyho'),
+                            socialMediaIcon(
+                              'assets/Twitter.png',
+                              'twitter.com/ghumneyho',
+                            ),
                           ],
                         ),
                       ),
@@ -146,9 +155,17 @@ class _MenuDrawerState extends State<MenuDrawer> {
                 ),
                 child: Column(
                   children: [
-                    footerItem("assets/IndianFlag.png", "Country/Region", "India"),
+                    footerItem(
+                      "assets/IndianFlag.png",
+                      "Country/Region",
+                      "India",
+                    ),
                     SizedBox(height: 10.h),
-                    footerItem("assets/blankrectangle.png", "App Version", "1.0.0"),
+                    footerItem(
+                      "assets/blankrectangle.png",
+                      "App Version",
+                      "1.0.0",
+                    ),
                   ],
                 ),
               ),
@@ -200,12 +217,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
   Widget footerItem(String image, String title, String subtitle) {
     return Row(
       children: [
-        Image.asset(
-          image,
-          height: 30.h,
-          width: 30.w,
-          fit: BoxFit.contain,
-        ),
+        Image.asset(image, height: 30.h, width: 30.w, fit: BoxFit.contain),
         SizedBox(width: 10.w),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,37 +245,51 @@ class _MenuDrawerState extends State<MenuDrawer> {
   }
 
   /// Show Information Dialog
-  Future<void> showInfo(BuildContext context, String title, String content, String email) {
+  Future<void> showInfo(
+    BuildContext context,
+    String title,
+    String content,
+    String email,
+  ) {
     return showDialog(
       barrierDismissible: true,
       barrierColor: Colors.black.withOpacity(0.1),
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: ConstColors.backgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
-        title: Text(
-          title,
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              content,
-              style: TextStyle(fontSize: 14.sp, color: ConstColors.textColor),
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: ConstColors.backgroundColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.r),
             ),
-            SizedBox(height: 10.h),
-            TextButton(
-              onPressed: () => openMail(email),
-              child: Text(
-                email,
-                style: TextStyle(fontSize: 14.sp, color: ConstColors.primaryColor),
-              ),
+            title: Text(
+              title,
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
-          ],
-        ),
-      ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  content,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: ConstColors.textColor,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                TextButton(
+                  onPressed: () => openMail(email),
+                  child: Text(
+                    email,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: ConstColors.primaryColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
     );
   }
 

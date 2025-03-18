@@ -16,6 +16,7 @@ class OrderPaymentController extends GetxController {
   // Observables for managing order and payment
   var orderId = 0.obs; // Observable for order ID
   var totalAmount = 0.0.obs; // Observable for total amount
+  var selectedPaymentMethod = "cash_on_delivery".obs; // Observable for selected payment method
 
   // Store the items list
   List<Map<String, dynamic>> items = [];
@@ -78,9 +79,7 @@ class OrderPaymentController extends GetxController {
   }
 
   /// Create payment and order items
-  Future<bool> createPaymentAndOrderItems({
-    required String paymentMethod,
-  }) async {
+  Future<bool> createPaymentAndOrderItems() async {
     try {
       // Log the orderId and totalAmount before making the payment
       print("Order ID in createPaymentAndOrderItems: ${orderId.value}");
@@ -97,11 +96,11 @@ class OrderPaymentController extends GetxController {
         return false;
       }
 
-      // Create payment
+      // Create payment (always use "cash_on_delivery" as the payment method)
       bool paymentSuccess = await _paymentsRepo.createPayment(
         orderId: orderId.value,
         amount: totalAmount.value,
-        paymentMethod: paymentMethod,
+        paymentMethod: "cash_on_delivery", // Hardcoded payment method
         status: "completed", // Always set status to "completed"
       );
 

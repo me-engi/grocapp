@@ -16,7 +16,8 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   final OrderRepo _orderRepo = OrderRepo(); // Instance of OrderRepo
-  RxList<Map<String, dynamic>> orders = <Map<String, dynamic>>[].obs; // Observable list for orders
+  RxList<Map<String, dynamic>> orders =
+      <Map<String, dynamic>>[].obs; // Observable list for orders
   RxBool isLoading = true.obs; // Loading state
 
   @override
@@ -35,7 +36,9 @@ class _OrderScreenState extends State<OrderScreen> {
         // Assuming the API response contains a key 'results' with the list of orders
         List<dynamic>? orderList = fetchedOrders['results'];
         if (orderList != null) {
-          orders.assignAll(orderList.cast<Map<String, dynamic>>()); // Update observable list
+          orders.assignAll(
+            orderList.cast<Map<String, dynamic>>(),
+          ); // Update observable list
         }
       } else {
         Fluttertoast.showToast(
@@ -64,25 +67,20 @@ class _OrderScreenState extends State<OrderScreen> {
           "My Orders",
           style: TextStyle(color: Colors.white, fontSize: 18.sp),
         ),
-        backgroundColor: ConstColors.primaryColor,
+        backgroundColor: Color(0xFF27A84A),
         centerTitle: true,
         elevation: 0,
       ),
       body: Obx(() {
         if (isLoading.value) {
           return Center(
-            child: CircularProgressIndicator(
-              color: ConstColors.primaryColor,
-            ),
+            child: CircularProgressIndicator(color: ConstColors.primaryColor),
           );
         } else if (orders.isEmpty) {
           return Center(
             child: Text(
               "No orders available.",
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: ConstColors.textColor,
-              ),
+              style: TextStyle(fontSize: 16.sp, color: ConstColors.textColor),
             ),
           );
         } else {
@@ -110,9 +108,7 @@ class OrderCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: EdgeInsets.all(16.w),
         child: Column(
@@ -178,7 +174,10 @@ class OrderCard extends StatelessWidget {
                   ),
                   subtitle: Text(
                     "Qty: ${item['quantity'] ?? 'N/A'}",
-                    style: TextStyle(fontSize: 12.sp, color: ConstColors.textColor),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: ConstColors.textColor,
+                    ),
                   ),
                   trailing: Text(
                     "\$${item['price'] ?? 'N/A'}",

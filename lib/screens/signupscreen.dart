@@ -54,7 +54,7 @@ class _SignUpState extends State<SignUp> {
           Get.snackbar(
             "Error",
             "Registration failed. Please try again.",
-            backgroundColor: ConstColors.red,
+            backgroundColor: Color(0xFF136F39),
             colorText: Colors.white,
           );
         }
@@ -63,7 +63,7 @@ class _SignUpState extends State<SignUp> {
         Get.snackbar(
           "Error",
           "An unexpected error occurred. Please try again.",
-          backgroundColor: ConstColors.red,
+          backgroundColor: Color(0xFF136F39),
           colorText: Colors.white,
         );
       } finally {
@@ -86,7 +86,7 @@ class _SignUpState extends State<SignUp> {
                 gradient: const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [ConstColors.primaryColor, ConstColors.red],
+                  colors: [Color(0xFF27A84A), Color(0xFF136F39)],
                 ),
               ),
             ),
@@ -114,8 +114,10 @@ class _SignUpState extends State<SignUp> {
                           spreadRadius: 1,
                         ),
                       ],
-                      borderRadius: BorderRadius.circular(40.r), // Use responsive radius
-                      color: ConstColors.backgroundColor,
+                      borderRadius: BorderRadius.circular(
+                        40.r,
+                      ), // Use responsive radius
+                      color: const Color.fromARGB(255, 255, 255, 255),
                     ),
                     child: Form(
                       key: formKey,
@@ -129,41 +131,29 @@ class _SignUpState extends State<SignUp> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
+                                  // Grocery App Logo
                                   Image.asset(
-                                    'assets/logo.png',
-                                    width: 0.2.sw, // Use screen width percentage
-                                    height: 0.2.sw, // Use screen width percentage
+                                    'assets/logo.png', // Replace with your grocery app logo
+                                    width:
+                                        0.6.sw, // Responsive width (20% of screen width)
+                                    height:
+                                        0.3.sw, // Responsive height (same as width for square aspect ratio)
                                     fit: BoxFit.fitWidth,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Grocery",
-                                        style: getTextTheme().headlineLarge?.copyWith(
-                                          fontSize: 24.sp, // Use responsive font size
-                                        ),
-                                      ),
-                                      Text(
-                                        " Groceryapp",
-                                        style: getTextTheme().headlineSmall?.copyWith(
-                                          fontSize: 16.sp, // Use responsive font size
-                                        ),
-                                      ),
-                                    ],
                                   ),
                                 ],
                               ),
                               SizedBox(
                                 width: 0.6.sw, // Use screen width percentage
                                 child: Divider(
-                                  color: ConstColors.shadowColor,
+                                  color: Color(0xFF136F39),
                                   height: 0,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 0.05.sh), // Use screen height percentage
+                          SizedBox(
+                            height: 0.05.sh,
+                          ), // Use screen height percentage
                           // Username Field
                           CustomTextFormField(
                             customText: "Username",
@@ -179,13 +169,16 @@ class _SignUpState extends State<SignUp> {
                             },
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
-                                  RegExp(r'[a-zA-Z0-9]')),
+                                RegExp(r'[a-zA-Z0-9]'),
+                              ),
                             ],
                             onChanged: (String value) {
                               log("Username changed: $value");
                             },
                           ),
-                          SizedBox(height: 0.03.sh), // Use screen height percentage
+                          SizedBox(
+                            height: 0.03.sh,
+                          ), // Use screen height percentage
                           // Email Field
                           CustomTextFormField(
                             customText: "Email",
@@ -194,7 +187,9 @@ class _SignUpState extends State<SignUp> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your email';
                               }
-                              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                              if (!RegExp(
+                                r'^[^@]+@[^@]+\.[^@]+',
+                              ).hasMatch(value)) {
                                 return 'Please enter a valid email address';
                               }
                               return null;
@@ -206,7 +201,9 @@ class _SignUpState extends State<SignUp> {
                               log("Email changed: $value");
                             },
                           ),
-                          SizedBox(height: 0.03.sh), // Use screen height percentage
+                          SizedBox(
+                            height: 0.03.sh,
+                          ), // Use screen height percentage
                           // First Name Field
                           CustomTextFormField(
                             customText: "First Name",
@@ -219,13 +216,16 @@ class _SignUpState extends State<SignUp> {
                             },
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
-                                  RegExp(r'[a-zA-Z ]')),
+                                RegExp(r'[a-zA-Z ]'),
+                              ),
                             ],
                             onChanged: (String value) {
                               log("First Name changed: $value");
                             },
                           ),
-                          SizedBox(height: 0.03.sh), // Use screen height percentage
+                          SizedBox(
+                            height: 0.03.sh,
+                          ), // Use screen height percentage
                           // Last Name Field
                           CustomTextFormField(
                             customText: "Last Name",
@@ -238,13 +238,16 @@ class _SignUpState extends State<SignUp> {
                             },
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
-                                  RegExp(r'[a-zA-Z ]')),
+                                RegExp(r'[a-zA-Z ]'),
+                              ),
                             ],
                             onChanged: (String value) {
                               log("Last Name changed: $value");
                             },
                           ),
-                          SizedBox(height: 0.03.sh), // Use screen height percentage
+                          SizedBox(
+                            height: 0.03.sh,
+                          ), // Use screen height percentage
                           // Password Field
                           Obx(
                             () => CustomTextFormField(
@@ -262,80 +265,90 @@ class _SignUpState extends State<SignUp> {
                               },
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
-                                    RegExp(r'.*')),
+                                  RegExp(r'.*'),
+                                ),
                               ],
                               onChanged: (String value) {
                                 log("Password changed: $value");
                               },
-                              iconss: passwordVisibility.value
-                                  ? IconButton(
-                                      onPressed: () {
-                                        passwordVisibility.value = false;
-                                      },
-                                      icon: Icon(
-                                        Icons.visibility_off,
-                                        color: ConstColors.primaryColor,
-                                        size: 24.sp, // Use responsive font size
+                              iconss:
+                                  passwordVisibility.value
+                                      ? IconButton(
+                                        onPressed: () {
+                                          passwordVisibility.value = false;
+                                        },
+                                        icon: Icon(
+                                          Icons.visibility_off,
+                                          color: Color(0xFF136F39),
+                                          size:
+                                              24.sp, // Use responsive font size
+                                        ),
+                                      )
+                                      : IconButton(
+                                        onPressed: () {
+                                          passwordVisibility.value = true;
+                                        },
+                                        icon: Icon(
+                                          Icons.visibility,
+                                          color: Color(0xFF136F39),
+                                          size:
+                                              24.sp, // Use responsive font size
+                                        ),
                                       ),
-                                    )
-                                  : IconButton(
-                                      onPressed: () {
-                                        passwordVisibility.value = true;
-                                      },
-                                      icon: Icon(
-                                        Icons.visibility,
-                                        color: ConstColors.primaryColor,
-                                        size: 24.sp, // Use responsive font size
-                                      ),
-                                    ),
                             ),
                           ),
-                          SizedBox(height: 0.02.sh), // Use screen height percentage
+                          SizedBox(
+                            height: 0.02.sh,
+                          ), // Use screen height percentage
                           // Sign Up Button
                           InkWell(
                             onTap: handleSignUp,
                             child: Container(
                               height: 50.h, // Use responsive height
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.r), // Use responsive radius
+                                borderRadius: BorderRadius.circular(
+                                  10.r,
+                                ), // Use responsive radius
                                 gradient: const LinearGradient(
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
                                   colors: [
-                                    ConstColors.primaryColor,
-                                    ConstColors.red,
+                                    Color(0xFF27A84A),
+                                    Color(0xFF136F39),
                                   ],
                                 ),
                               ),
-                              child: Obx(() => Center(
-                                    child: isLoading.value
-                                        ? const CircularProgressIndicator(
-                                            color:
-                                                ConstColors.backgroundColor,
+                              child: Obx(
+                                () => Center(
+                                  child:
+                                      isLoading.value
+                                          ? const CircularProgressIndicator(
+                                            color: ConstColors.backgroundColor,
                                           )
-                                        : Text(
+                                          : Text(
                                             "Sign Up",
-                                            style: getTextTheme()
-                                                .titleMedium
+                                            style: getTextTheme().titleMedium
                                                 ?.copyWith(
-                                                  fontSize: 16.sp, // Use responsive font size
+                                                  fontSize:
+                                                      16.sp, // Use responsive font size
                                                 ),
                                           ),
-                                  )),
+                                ),
+                              ),
                             ),
                           ),
-                          SizedBox(height: 0.02.sh), // Use screen height percentage
+                          SizedBox(
+                            height: 0.02.sh,
+                          ), // Use screen height percentage
                           // Already Have an Account? Sign In
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 "Already have an account? ",
-                                style: getTextTheme()
-                                    .headlineSmall
-                                    ?.copyWith(
-                                      fontSize: 14.sp, // Use responsive font size
-                                    ),
+                                style: getTextTheme().headlineSmall?.copyWith(
+                                  fontSize: 14.sp, // Use responsive font size
+                                ),
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -343,16 +356,16 @@ class _SignUpState extends State<SignUp> {
                                 },
                                 child: Text(
                                   "Sign In",
-                                  style: getTextTheme()
-                                      .displaySmall
-                                      ?.copyWith(
-                                        fontSize: 14.sp, // Use responsive font size
-                                      ),
+                                  style: getTextTheme().displaySmall?.copyWith(
+                                    fontSize: 14.sp, // Use responsive font size
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 0.05.sh), // Use screen height percentage
+                          SizedBox(
+                            height: 0.05.sh,
+                          ), // Use screen height percentage
                         ],
                       ),
                     ),
@@ -372,19 +385,19 @@ class CurveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     int curveHeight = 40;
-    Offset controlPoint =
-        Offset(size.width / 2, size.height + curveHeight);
+    Offset controlPoint = Offset(size.width / 2, size.height + curveHeight);
     Offset endPoint = Offset(size.width, size.height - curveHeight);
-    Path path = Path()
-      ..lineTo(0, size.height - curveHeight)
-      ..quadraticBezierTo(
-        controlPoint.dx,
-        controlPoint.dy,
-        endPoint.dx,
-        endPoint.dy,
-      )
-      ..lineTo(size.width, 0)
-      ..close();
+    Path path =
+        Path()
+          ..lineTo(0, size.height - curveHeight)
+          ..quadraticBezierTo(
+            controlPoint.dx,
+            controlPoint.dy,
+            endPoint.dx,
+            endPoint.dy,
+          )
+          ..lineTo(size.width, 0)
+          ..close();
     return path;
   }
 

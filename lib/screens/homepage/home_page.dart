@@ -29,10 +29,11 @@ class HomePage extends StatelessWidget {
                 return _buildCategoryShimmer(); // Shimmer effect for categories
               }
               return Container(
-                height: 80,
+                height: 80, // Fixed height for the categories list
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: _productController.categories.length + 1, // +1 for "All Categories"
+                  itemCount:
+                      _productController.categories.length + 1, // +1 for "All Categories"
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       // "All Categories" option
@@ -40,7 +41,8 @@ class HomePage extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: FilterChip(
                           label: Text("All Categories"),
-                          selected: _productController.selectedCategoryId.value == 0,
+                          selected:
+                              _productController.selectedCategoryId.value == 0,
                           onSelected: (selected) {
                             _productController.clearCategoryFilter();
                           },
@@ -48,15 +50,21 @@ class HomePage extends StatelessWidget {
                       );
                     } else {
                       // Other categories
-                      CategoryModel category = _productController.categories[index - 1];
+                      CategoryModel category =
+                          _productController.categories[index - 1];
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: FilterChip(
                           label: Text(category.name),
-                          selected: _productController.selectedCategoryId.value == category.id,
+                          selected:
+                              _productController.selectedCategoryId.value ==
+                                  category.id,
                           onSelected: (selected) {
-                            _productController.selectedCategoryId.value = category.id;
-                            _productController.fetchProductsByCategory(category.id);
+                            _productController.selectedCategoryId.value =
+                                category.id;
+                            _productController.fetchProductsByCategory(
+                              category.id,
+                            );
                           },
                         ),
                       );
@@ -69,8 +77,11 @@ class HomePage extends StatelessWidget {
             // Products Grid View
             Expanded(
               child: Obx(() {
-                if (_productController.filteredProducts.isEmpty && _productController.allProducts.isNotEmpty) {
-                  return Center(child: Text("No products found for this category."));
+                if (_productController.filteredProducts.isEmpty &&
+                    _productController.allProducts.isNotEmpty) {
+                  return Center(
+                    child: Text("No products found for this category."),
+                  );
                 }
                 if (_productController.allProducts.isEmpty) {
                   return _buildProductShimmer(); // Shimmer effect for products
@@ -81,11 +92,12 @@ class HomePage extends StatelessWidget {
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 0.75,
+                    childAspectRatio: 0.75, // Fixed aspect ratio
                   ),
                   itemCount: _productController.filteredProducts.length,
                   itemBuilder: (context, index) {
-                    ProductModel product = _productController.filteredProducts[index];
+                    ProductModel product =
+                        _productController.filteredProducts[index];
                     return ProductCard(product: product);
                   },
                 );
@@ -100,7 +112,7 @@ class HomePage extends StatelessWidget {
   /// Shimmer effect for categories
   Widget _buildCategoryShimmer() {
     return Container(
-      height: 80,
+      height: 80, // Fixed height for the shimmer
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 6, // Number of shimmer items
@@ -111,7 +123,7 @@ class HomePage extends StatelessWidget {
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
               child: Container(
-                width: 100,
+                width: 100, // Fixed width for shimmer items
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -132,7 +144,7 @@ class HomePage extends StatelessWidget {
         crossAxisCount: 2,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
-        childAspectRatio: 0.75,
+        childAspectRatio: 0.75, // Fixed aspect ratio
       ),
       itemCount: 6, // Number of shimmer items
       itemBuilder: (context, index) {
@@ -160,17 +172,9 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 100,
-                        height: 16,
-                        color: Colors.white,
-                      ),
+                      Container(width: 100, height: 16, color: Colors.white),
                       SizedBox(height: 5),
-                      Container(
-                        width: 60,
-                        height: 14,
-                        color: Colors.white,
-                      ),
+                      Container(width: 60, height: 14, color: Colors.white),
                     ],
                   ),
                 ),
@@ -213,9 +217,7 @@ class ProductCard extends StatelessWidget {
       },
       child: Card(
         elevation: 5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -235,20 +237,14 @@ class ProductCard extends StatelessWidget {
                 children: [
                   Text(
                     product.name,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 5),
                   Text(
                     "\₹${product.price.toStringAsFixed(2)}",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.green,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.green),
                   ),
                 ],
               ),
@@ -261,7 +257,9 @@ class ProductCard extends StatelessWidget {
                 width: double.infinity, // Make the button full width
                 child: ElevatedButton(
                   onPressed: () async {
-                    bool success = await _productController.addToCart(product.id);
+                    bool success = await _productController.addToCart(
+                      product.id,
+                    );
                     if (success) {
                       Get.snackbar(
                         "Success",
@@ -278,7 +276,18 @@ class ProductCard extends StatelessWidget {
                       );
                     }
                   },
-                  child: Text("Add to Cart"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF136F39), // Button color
+                    foregroundColor: Colors.white, // Text color
+                    padding: const EdgeInsets.symmetric(vertical: 12), // Padding
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8), // Rounded corners
+                    ),
+                  ),
+                  child: const Text(
+                    "Add to Cart",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
@@ -303,9 +312,7 @@ class ProductCard extends StatelessWidget {
       fit: BoxFit.cover,
       width: double.infinity,
       errorBuilder: (context, error, stackTrace) {
-        return Center(
-          child: Icon(Icons.error, color: Colors.red, size: 50),
-        );
+        return Center(child: Icon(Icons.error, color: Colors.red, size: 50));
       },
     );
   }

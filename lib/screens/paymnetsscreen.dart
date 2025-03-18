@@ -54,7 +54,7 @@ class PaymentScreen extends StatelessWidget {
 
             // Total Amount
             Text(
-              "Total Amount: \$${totalAmount.toStringAsFixed(2)}",
+              "Total Amount: \₹${totalAmount.toStringAsFixed(2)}",
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
@@ -63,12 +63,70 @@ class PaymentScreen extends StatelessWidget {
             ),
             SizedBox(height: 32.h),
 
-            // Payment Method (Cash on Delivery)
+            // Payment Method Selection
             Text(
-              "Payment Method: Cash on Delivery",
+              "Select Payment Method:",
               style: TextStyle(
                 fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
                 color: ConstColors.textColor,
+              ),
+            ),
+            SizedBox(height: 16.h),
+
+            // Payment Method Options
+            Obx(
+              () => Column(
+                children: [
+                  RadioListTile(
+                    title: Text(
+                      "UPI",
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
+                    value: "upi",
+                    groupValue: _controller.selectedPaymentMethod.value,
+                    onChanged: (value) {
+                      _controller.selectedPaymentMethod.value = value.toString();
+                    },
+                    activeColor: ConstColors.primaryColor,
+                  ),
+                  RadioListTile(
+                    title: Text(
+                      "Credit Card",
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
+                    value: "credit_card",
+                    groupValue: _controller.selectedPaymentMethod.value,
+                    onChanged: (value) {
+                      _controller.selectedPaymentMethod.value = value.toString();
+                    },
+                    activeColor: ConstColors.primaryColor,
+                  ),
+                  RadioListTile(
+                    title: Text(
+                      "Bank Transfer",
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
+                    value: "bank_transfer",
+                    groupValue: _controller.selectedPaymentMethod.value,
+                    onChanged: (value) {
+                      _controller.selectedPaymentMethod.value = value.toString();
+                    },
+                    activeColor: ConstColors.primaryColor,
+                  ),
+                  RadioListTile(
+                    title: Text(
+                      "Cash on Delivery",
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
+                    value: "cash_on_delivery",
+                    groupValue: _controller.selectedPaymentMethod.value,
+                    onChanged: (value) {
+                      _controller.selectedPaymentMethod.value = value.toString();
+                    },
+                    activeColor: ConstColors.primaryColor,
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 32.h),
@@ -81,10 +139,8 @@ class PaymentScreen extends StatelessWidget {
                   print("Order ID before payment: $orderId");
                   print("Total Amount before payment: $totalAmount");
 
-                  // Process payment
-                  bool success = await _controller.createPaymentAndOrderItems(
-                    paymentMethod: "cash_on_delivery", // Hardcoded payment method
-                  );
+                  // Process payment (always send "cash_on_delivery" as payment method)
+                  bool success = await _controller.createPaymentAndOrderItems(); // No need to pass paymentMethod
 
                   if (success) {
                     // Navigate to the success screen

@@ -49,7 +49,7 @@ class _SignInState extends State<SignIn> {
           Get.snackbar(
             "Error",
             "Invalid username or password",
-            backgroundColor: ConstColors.red,
+            backgroundColor: Color(0xFF136F39),
             colorText: Colors.white,
           );
         }
@@ -58,7 +58,7 @@ class _SignInState extends State<SignIn> {
         Get.snackbar(
           "Error",
           "An unexpected error occurred. Please try again.",
-          backgroundColor: ConstColors.red,
+          backgroundColor: Color(0xFF136F39),
           colorText: Colors.white,
         );
       } finally {
@@ -83,7 +83,7 @@ class _SignInState extends State<SignIn> {
                   gradient: const LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [ConstColors.primaryColor, ConstColors.red],
+                    colors: [Color(0xFF27A84A), Color(0xFF136F39)],
                   ),
                 ),
               ),
@@ -111,8 +111,10 @@ class _SignInState extends State<SignIn> {
                             spreadRadius: 1,
                           ),
                         ],
-                        borderRadius: BorderRadius.circular(40.r), // Use responsive radius
-                        color: ConstColors.backgroundColor,
+                        borderRadius: BorderRadius.circular(
+                          40.r,
+                        ), // Use responsive radius
+                        color: const Color.fromARGB(255, 255, 255, 255),
                       ),
                       child: Form(
                         key: formKey,
@@ -121,7 +123,9 @@ class _SignInState extends State<SignIn> {
                           children: [
                             // Logo Widget
                             const LogoWidget(),
-                            SizedBox(height: 0.05.sh), // Use screen height percentage
+                            SizedBox(
+                              height: 0.05.sh,
+                            ), // Use screen height percentage
                             // Username Field
                             CustomTextFormField(
                               customText: "Username",
@@ -138,14 +142,17 @@ class _SignInState extends State<SignIn> {
                               inputFormatters: [
                                 // Allow only alphanumeric characters
                                 FilteringTextInputFormatter.allow(
-                                    RegExp(r'[a-zA-Z0-9]')),
+                                  RegExp(r'[a-zA-Z0-9]'),
+                                ),
                               ],
                               onChanged: (String value) {
                                 // Log or handle username changes
                                 log("Username changed: $value");
                               },
                             ),
-                            SizedBox(height: 0.03.sh), // Use screen height percentage
+                            SizedBox(
+                              height: 0.03.sh,
+                            ), // Use screen height percentage
                             // Password Field
                             Obx(
                               () => CustomTextFormField(
@@ -164,36 +171,42 @@ class _SignInState extends State<SignIn> {
                                 inputFormatters: [
                                   // Allow all characters for password
                                   FilteringTextInputFormatter.allow(
-                                      RegExp(r'.*')),
+                                    RegExp(r'.*'),
+                                  ),
                                 ],
                                 onChanged: (String value) {
                                   // Log or handle password changes
                                   log("Password changed: $value");
                                 },
-                                iconss: passwordVisibility.value
-                                    ? IconButton(
-                                        onPressed: () {
-                                          passwordVisibility.value = false;
-                                        },
-                                        icon: Icon(
-                                          Icons.visibility_off,
-                                          color: ConstColors.primaryColor,
-                                          size: 24.sp, // Use responsive font size
+                                iconss:
+                                    passwordVisibility.value
+                                        ? IconButton(
+                                          onPressed: () {
+                                            passwordVisibility.value = false;
+                                          },
+                                          icon: Icon(
+                                            Icons.visibility_off,
+                                            color: Color(0xFF136F39),
+                                            size:
+                                                24.sp, // Use responsive font size
+                                          ),
+                                        )
+                                        : IconButton(
+                                          onPressed: () {
+                                            passwordVisibility.value = true;
+                                          },
+                                          icon: Icon(
+                                            Icons.visibility,
+                                            color: Color(0xFF136F39),
+                                            size:
+                                                24.sp, // Use responsive font size
+                                          ),
                                         ),
-                                      )
-                                    : IconButton(
-                                        onPressed: () {
-                                          passwordVisibility.value = true;
-                                        },
-                                        icon: Icon(
-                                          Icons.visibility,
-                                          color: ConstColors.primaryColor,
-                                          size: 24.sp, // Use responsive font size
-                                        ),
-                                      ),
                               ),
                             ),
-                            SizedBox(height: 0.02.sh), // Use screen height percentage
+                            SizedBox(
+                              height: 0.02.sh,
+                            ), // Use screen height percentage
                             // Forgot Password Link
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -202,48 +215,59 @@ class _SignInState extends State<SignIn> {
                                   onTap: () => urlLaunch(Global.forgotPassword),
                                   child: Text(
                                     'Forgot password?',
-                                    style: getTextTheme().displaySmall?.copyWith(
-                                      fontSize: 14.sp, // Use responsive font size
-                                    ),
+                                    style: getTextTheme().displaySmall
+                                        ?.copyWith(
+                                          fontSize:
+                                              14.sp, // Use responsive font size
+                                        ),
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 0.02.sh), // Use screen height percentage
+                            SizedBox(
+                              height: 0.02.sh,
+                            ), // Use screen height percentage
                             // Sign In Button
                             InkWell(
                               onTap: handleLogin,
                               child: Container(
                                 height: 50.h, // Use responsive height
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.r), // Use responsive radius
+                                  borderRadius: BorderRadius.circular(
+                                    10.r,
+                                  ), // Use responsive radius
                                   gradient: const LinearGradient(
                                     begin: Alignment.centerLeft,
                                     end: Alignment.centerRight,
                                     colors: [
-                                      ConstColors.primaryColor,
-                                      ConstColors.red,
+                                      Color(0xFF27A84A),
+                                      Color(0xFF136F39),
                                     ],
                                   ),
                                 ),
-                                child: Obx(() => Center(
-                                      child: isLoading.value
-                                          ? const CircularProgressIndicator(
+                                child: Obx(
+                                  () => Center(
+                                    child:
+                                        isLoading.value
+                                            ? const CircularProgressIndicator(
                                               color:
                                                   ConstColors.backgroundColor,
                                             )
-                                          : Text(
+                                            : Text(
                                               "Sign In",
-                                              style: getTextTheme()
-                                                  .titleMedium
+                                              style: getTextTheme().titleMedium
                                                   ?.copyWith(
-                                                    fontSize: 16.sp, // Use responsive font size
+                                                    fontSize:
+                                                        16.sp, // Use responsive font size
                                                   ),
                                             ),
-                                    )),
+                                  ),
+                                ),
                               ),
                             ),
-                            SizedBox(height: 0.02.sh), // Use screen height percentage
+                            SizedBox(
+                              height: 0.02.sh,
+                            ), // Use screen height percentage
                             // Divider with text
                             // const Row(
                             //   children: [
@@ -300,18 +324,18 @@ class _SignInState extends State<SignIn> {
                             //     ],
                             //   ),
                             // ),
-                            SizedBox(height: 0.05.sh), // Use screen height percentage
+                            SizedBox(
+                              height: 0.05.sh,
+                            ), // Use screen height percentage
                             // Don't have an account? Sign Up
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   "Don’t have an account? ",
-                                  style: getTextTheme()
-                                      .headlineSmall
-                                      ?.copyWith(
-                                        fontSize: 14.sp, // Use responsive font size
-                                      ),
+                                  style: getTextTheme().headlineSmall?.copyWith(
+                                    fontSize: 14.sp, // Use responsive font size
+                                  ),
                                 ),
                                 GestureDetector(
                                   onTap: () {
@@ -319,16 +343,18 @@ class _SignInState extends State<SignIn> {
                                   },
                                   child: Text(
                                     "Sign Up",
-                                    style: getTextTheme()
-                                        .displaySmall
+                                    style: getTextTheme().displaySmall
                                         ?.copyWith(
-                                          fontSize: 14.sp, // Use responsive font size
+                                          fontSize:
+                                              14.sp, // Use responsive font size
                                         ),
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 0.05.sh), // Use screen height percentage
+                            SizedBox(
+                              height: 0.05.sh,
+                            ), // Use screen height percentage
                           ],
                         ),
                       ),
@@ -347,8 +373,7 @@ class _SignInState extends State<SignIn> {
   static Future<void> urlLaunch(String urlunch) async {
     String url = urlunch;
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url),
-          mode: LaunchMode.externalApplication);
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
       debugPrint('Could not launch URL: $url');
     }
@@ -360,19 +385,19 @@ class CurveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     int curveHeight = 40;
-    Offset controlPoint =
-        Offset(size.width / 2, size.height + curveHeight);
+    Offset controlPoint = Offset(size.width / 2, size.height + curveHeight);
     Offset endPoint = Offset(size.width, size.height - curveHeight);
-    Path path = Path()
-      ..lineTo(0, size.height - curveHeight)
-      ..quadraticBezierTo(
-        controlPoint.dx,
-        controlPoint.dy,
-        endPoint.dx,
-        endPoint.dy,
-      )
-      ..lineTo(size.width, 0)
-      ..close();
+    Path path =
+        Path()
+          ..lineTo(0, size.height - curveHeight)
+          ..quadraticBezierTo(
+            controlPoint.dx,
+            controlPoint.dy,
+            endPoint.dx,
+            endPoint.dy,
+          )
+          ..lineTo(size.width, 0)
+          ..close();
     return path;
   }
 

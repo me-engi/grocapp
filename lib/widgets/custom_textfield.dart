@@ -60,12 +60,12 @@ class CustomTextFormField extends StatelessWidget {
         suffixIcon: iconss,
         hintStyle: TextStyle(
           fontWeight: FontWeight.w500,
-          color: const Color(0xFFC5C5C5),
+          color: const Color.fromARGB(255, 179, 179, 179),
           fontSize: 14.sp, // Responsive font size
         ),
         errorStyle: TextStyle(
           height: 0,
-          color: ConstColors.red,
+          color: Color.fromARGB(255, 244, 62, 1),
           fontSize: 12.sp, // Responsive font size
         ),
         filled: true,
@@ -75,44 +75,56 @@ class CustomTextFormField extends StatelessWidget {
           horizontal: 16.w, // Responsive padding
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.r)), // Responsive radius
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.r),
+          ), // Responsive radius
           borderSide: BorderSide(
             width: 0.6.w, // Responsive border width
-            color: ConstColors.primaryColor,
+            color: Color(0xFF136F39),
           ),
         ),
         disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.r)), // Responsive radius
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.r),
+          ), // Responsive radius
           borderSide: BorderSide(
             width: 0.6.w, // Responsive border width
-            color: ConstColors.primaryColor,
+            color: Color(0xFF136F39),
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.r)), // Responsive radius
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.r),
+          ), // Responsive radius
           borderSide: BorderSide(
             width: 0.6.w, // Responsive border width
-            color: ConstColors.primaryColor,
+            color: Color(0xFF136F39),
           ),
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.r)), // Responsive radius
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.r),
+          ), // Responsive radius
           borderSide: BorderSide(
             width: 0.6.w, // Responsive border width
           ),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.r)), // Responsive radius
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.r),
+          ), // Responsive radius
           borderSide: BorderSide(
             width: 0.6.w, // Responsive border width
-            color: ConstColors.red,
+            color: Color(0xFF136F39),
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.r)), // Responsive radius
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.r),
+          ), // Responsive radius
           borderSide: BorderSide(
             width: 0.6.w, // Responsive border width
-            color: ConstColors.red,
+            color: Color(0xFF136F39),
           ),
         ),
       ),
