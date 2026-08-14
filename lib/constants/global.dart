@@ -1,5 +1,5 @@
 class Global {
-  static const hostUrl = "https://aspos.pythonanywhere.com/api/";
+  static const hostUrl = "https://ecommerce.pythonanywhere.com/api/";
   static const productbycategory ='products/by-category/';
   static const login = 'token/';
   static const profile = 'profiles';
