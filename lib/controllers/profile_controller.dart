@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:grocery/models/profilr_model.dart';
 import 'package:grocery/screens/sign_in_repo/profile_repo.dart';
- // Import the ProfileModel
+import 'package:grocery/constants/global.dart'; // Import Global
 
 class ProfileController extends GetxController {
   final ProfileRepo _profileRepo = ProfileRepo();
@@ -21,6 +21,7 @@ class ProfileController extends GetxController {
       final data = await _profileRepo.getProfile();
       if (data != null) {
         profileData.value = ProfileModel.fromJson(data['results'][0]);
+        Global.userId = profileData.value?.id; // Set dynamically
       }
     } catch (e) {
       print("Error fetching profile data: $e");

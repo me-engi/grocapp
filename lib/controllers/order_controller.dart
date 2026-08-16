@@ -25,9 +25,9 @@ class OrderController extends GetxController {
     required double totalPrice,
     required List<Map<String, dynamic>> items,
   }) async {
-    // Use the hardcoded user ID and shop owner ID from global.dart
-    final int userId = Global.userId;
-    final int shopOwnerId = Global.shopOwnerId;
+    // Use the dynamic user ID and shop owner ID from global.dart
+    final int userId = Global.userId ?? 0;
+    final int shopOwnerId = Global.shopOwnerId ?? 0;
 
     // Call the createOrder method from OrderRepo
     Map<String, dynamic>? orderResponse = await _orderRepo.createOrder(

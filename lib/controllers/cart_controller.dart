@@ -179,10 +179,15 @@ class CartController extends GetxController {
         });
       }
 
+      // Update shopOwnerId dynamically based on the first item in the cart
+      if (cartItemsWithDetails.isNotEmpty) {
+        Global.shopOwnerId = cartItemsWithDetails.first['product'].shopOwnerId;
+      }
+
       // Call the createOrder method from OrderRepo
       Map<String, dynamic>? orderResponse = await _orderRepo.createOrder(
-        userId: Global.userId, // Use the hardcoded user ID from global.dart
-        shopOwnerId: Global.shopOwnerId, // Use the hardcoded shop owner ID from global.dart
+        userId: Global.userId ?? 0, // Use the dynamic user ID
+        shopOwnerId: Global.shopOwnerId ?? 0, // Use the dynamic shop owner ID
         totalPrice: totalPrice.value,
         items: items,
       );

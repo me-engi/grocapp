@@ -30,9 +30,9 @@ class OrderPaymentController extends GetxController {
       // Store the items list
       this.items = items;
 
-      // Use the hardcoded user ID and shop owner ID from global.dart
-      final int userId = Global.userId;
-      final int shopOwnerId = Global.shopOwnerId;
+      // Use the dynamic user ID and shop owner ID from global.dart
+      final int userId = Global.userId ?? 0;
+      final int shopOwnerId = Global.shopOwnerId ?? 0;
 
       // Create the order
       Map<String, dynamic>? orderResponse = await _orderRepo.createOrder(
