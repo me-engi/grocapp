@@ -1,5 +1,6 @@
 class Global {
   static const hostUrl = "https://ecommerce.pythonanywhere.com/api/";
+  // static const hostUrl = "http://10.0.2.2:8000/api/"; // Use 10.0.2.2 for Android emulator to localhost
   static const productbycategory ='products/by-category/';
   static const login = 'token/';
   static const profile = 'profiles';

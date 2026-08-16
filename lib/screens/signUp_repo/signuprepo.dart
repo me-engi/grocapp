@@ -43,8 +43,8 @@ class SignUpRepo {
       // Check if the registration was successful
       if (response.statusCode == 201) {
         // Save the token and user ID to persistent storage
-        await box.write('token', response.data["id"]); // Assuming "id" is returned
-        log("User registered successfully. User ID: ${response.data["id"]}");
+        await box.write('token', response.data["token"]); // Assuming "token" is returned
+        log("User registered successfully. Token: ${response.data["token"]}");
         return "true";
       }
       return "false";
